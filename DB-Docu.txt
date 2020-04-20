@@ -1,0 +1,134 @@
+CREATE DATABASE `STOREDB`;
+
+CREATE TABLE `Stores` (
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `StoreNo` varchar(255) NOT NULL DEFAULT '',
+  `Description` varchar(255) NOT NULL DEFAULT '',
+  `Address` varchar(255) DEFAULT NULL,
+  `BrgyCode` varchar(255) DEFAULT NULL,
+  `CityMunCode` varchar(255) DEFAULT NULL,
+  `ProvCode` varchar(255) DEFAULT NULL,
+  `RegCode` varchar(255) DEFAULT NULL,
+  `ZipCode` varchar(15) DEFAULT NULL,
+  `ContactNo` varchar(100) DEFAULT NULL,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_storeno` (`StoreNo`),
+  UNIQUE KEY `idx_storedesc` (`Description`),
+  FOREIGN KEY (`BrgyCode`) REFERENCES `Barangay` (`Code`) ON UPDATE CASCADE,
+  FOREIGN KEY (`CityMunCode`) REFERENCES `CityMun` (`Code`) ON UPDATE CASCADE,
+  FOREIGN KEY (`ProvCode`) REFERENCES `Province` (`Code`) ON UPDATE CASCADE,
+  FOREIGN KEY (`RegCode`) REFERENCES `Region` (`Code`) ON UPDATE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Users` (
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `UserName` varchar(40) NOT NULL DEFAULT '',
+  `Password` varchar(50) DEFAULT NULL,
+  `LastName` varchar(50) NOT NULL DEFAULT '',
+  `FirstName` varchar(50) NOT NULL DEFAULT '',
+  `MidName` varchar(50) DEFAULT NULL,
+  `Storekey` int(11) DEFAULT NULL,
+  `Email` varchar(320) DEFAULT NULL,
+  `MobileNo` varchar(20) DEFAULT NULL,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_user` (`UserName`),
+  FOREIGN KEY (`Storekey`) REFERENCES `Stores` (`Autokey`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE UserLoginTokens(
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `Userkey` int(11) NOT NULL,
+  `Token` text,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  KEY `idx_tokens_userkey` (`Userkey`),
+  FOREIGN KEY (`Userkey`) REFERENCES `Users` (`Autokey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `FormOutlineMain` (
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `Storekey` int(11) DEFAULT NULL,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_storekey` (`Storekey`),
+  FOREIGN KEY (`Storekey`) REFERENCES `Stores` (`Autokey`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `FormOutlineDetl`(
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `FormOutlinekey` int(11) NOT NULL,
+  `SeqNo` tinyint(3) DEFAULT '0',
+  `Description` varchar(100) NOT NULL,
+  `Type` enum('T','N','S','C') DEFAULT 'T',
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_desc` (`FormOutlinekey`,`Description`),
+  FOREIGN KEY (`FormOutlinekey`) REFERENCES `FormOutlineMain` (`Autokey`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--TODO: double check tables
+CREATE TABLE DailyRecordMain(
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `Storekey` int(11) NOT NULL,
+  `RecordDate` date NOT NULL,
+  `Remarks` text,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_dailyrec` (`Storekey`, `RecordDate`),
+  FOREIGN KEY (`Storekey`) REFERENCES `Stores` (`Autokey`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE DailyRecordDetl(
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `DailyRecordkey` int(11) NOT NULL,
+  `OutlineDetlkey` int(11) NOT NULL,
+  `RawData` text,
+  `CreatedBy` varchar(40) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastEditBy` varchar(40) DEFAULT NULL,
+  `LastEditDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_dailyrecraw` (`DailyRecordkey`, `OutlineDetlkey`),
+  FOREIGN KEY (`DailyRecordkey`) REFERENCES `DailyRecordMain` (`Autokey`) ON DELETE CASCADE,
+  FOREIGN KEY (`OutlineDetlkey`) REFERENCES `FormOutlineDetl` (`Autokey`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE Colors (
+  `Autokey` int(11) NOT NULL AUTO_INCREMENT,
+  `Description` varchar(255) NOT NULL,
+  `Red` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `Green` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `Blue` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Autokey`),
+  UNIQUE KEY `idx_colorrgb` (`Red`,`Green`,`Blue`),
+  KEY `idx_colordesc` (`Description`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+insert into Stores (StoreNo, Description, Address, BrgyCode, CityMunCode, ProvCode, RegCode, ZipCode, CreatedBy, LastEditBy) values ('20-00001', 'Clemen\'s Store', NULL, NULL, NULL, NULL, NULL, NULL, 'jp', 'jp');
+
+insert into Users (UserName, Password, LastName, FirstName, MidName, Storekey, Email, CreatedBy, LastEditBy) values ('jp', password('admin'), 'Pasion', 'John Paul', 'Pigao', 1, 'jp.pasion16@gmail.com', 'jp', 'jp');

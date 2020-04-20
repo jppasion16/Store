@@ -1,0 +1,12 @@
+RewriteEngine On
+
+RewriteCond %{SCRIPT_FILENAME} !-d  
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule ^([^/]+)/?$ ?page=$1 [L,QSA,NC]
+
+# RewriteRule ^/([0-9a-zA-Z_-]+) index.php?page=$1 [NC,L]
+RewriteRule ^settings/([0-9a-zA-Z_-]+) settings.php?type=$1 [NC,L]
+
+Options -Indexes
+ErrorDocument 500 "Sorry, our script crashed. Oh dear"
+ErrorDocument 404 /Store/error/
