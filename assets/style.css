@@ -1,0 +1,87 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+    width: 7px;
+    visibility: hidden;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: #fff; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #aaa; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #888; 
+}
+
+html, body{
+    height: 100%;
+}
+
+nav.navbar{
+    box-shadow: 0 4px 4px -4px rgba(0,0,0,.2);
+}
+
+nav.navbar + *{
+    min-height: 100%;
+    padding-top: 70px; /* header */
+    padding-bottom: 50px; /* footer */
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+    text-align: right;
+}
+
+a{
+    text-decoration: none;
+}
+
+.row-clear{
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+.row-clear td, .row-clear th{
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+
+.footer{
+    position: relative;
+    margin-top: -50px;
+    height: 50px;
+    clear:both;
+}
+
+.footer .footer-content{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer.bg-primary a,
+.footer.bg-secondary a,
+.footer.bg-success a,
+.footer.bg-danger a,
+.footer.bg-info a,
+.footer.bg-dark a{
+    color: #fff;
+    text-decoration: none;
+}
