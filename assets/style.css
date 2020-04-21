@@ -85,3 +85,8 @@ a{
     color: #fff;
     text-decoration: none;
 }
+
+/* to remove copyright of 000webhost */
+.footer + div{
+    z-index: -1 !important;
+}
