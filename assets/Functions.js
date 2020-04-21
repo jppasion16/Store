@@ -1,6 +1,12 @@
 /*
     general functions to use in the system
 */
+
+$(document).ready(function(){
+    // for 000webhost
+    $(".footer + div").css("display","none");
+});
+
 var lastScrollTop = 0;
 
 function myScrollListener(element, DownFunction, UpFunction){
