@@ -38,9 +38,7 @@ if(!isset($_SESSION["currUserName"])){
     header("Location: ".$_SESSION["HomeDir"]."login");
     exit;
 }
-$boolFromLogin = true;
-$_SESSION["currUserName"] = "jp";
-$_SESSION["currPassword"] = "admin";
+
 $intHandle = myOpenDB();
 
 $txtDateToday = date("Y-m-d");
