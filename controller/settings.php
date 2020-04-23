@@ -29,6 +29,33 @@ function FormOutlineRender($rsResult){
 }
 
 switch(strtolower($_GET["type"])){
+    /**
+     * saving
+     */
+    case "save":
+        switch(strtolower(addslashes($_POST["txtSaveType"]))){
+            case "store":
+                // TODO
+            break;
+            case "account":
+                $strQ = "UPDATE Users SET";
+                if(isset($_POST["txtLastName"])) $strQ .= " LastName = '".addslashes(trim($_POST["txtLastName"]))."',";
+                if(isset($_POST["txtFirstName"])) $strQ .= " FirstName = '".addslashes(trim($_POST["txtFirstName"]))."',";
+                if(isset($_POST["txtMidName"])) $strQ .= " MidName = '".addslashes(trim($_POST["txtMidName"]))."',";
+                if(isset($_POST["txtEmail"])) $strQ .= " Email = '".addslashes(trim($_POST["txtEmail"]))."',";
+                if(isset($_POST["txtMobileNo"])) $strQ .= " MobileNo = '".addslashes(trim($_POST["txtMobileNo"]))."',";
+                $strQ .= " LastEditBy = '".$_SESSION["currUserName"]."',";
+                $strQ .= " LastEditDate = '".date("Y-m-d H:i:s")."'";
+                $strQ .= " WHERE UserName = '".$_SESSION["currUserName"]."'";
+                if(myUpdateDB($strQ, $intHandle)) $_SESSION["intSaveSuccess"] = 1;
+                else $_SESSION["intSaveSuccess"] = 0;
+                header("Location: ".$_SESSION["HomeDir"]."settings/".$_POST["txtSaveType"]);
+            break;
+            default:
+                Error404();
+            break;
+        }
+    break;
     case "store":
         $intStorekey = $_SESSION["storeKey"];
         $strQ = "SELECT StoreNo, `Description` FROM Stores where Autokey = '$intStorekey'";
