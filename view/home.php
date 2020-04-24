@@ -79,7 +79,7 @@
     </div>
 </div>
 
-<input type="hidden" id="txtLastDateRecord" value="<?=date("Y-m-d", strtotime($txtDateToday."+1 days"));?>">
+<input type="hidden" id="txtLastDateRecord" value="<?=$txtReportDateReset?>">
 
 <script>
 /**
@@ -257,6 +257,9 @@ $(document).ready(function(){
                     if(check >= from && check <= to){
                         myChart_update(myChart);
                     }
+                    if(Date.parse($("#txtLastDateRecord").val()) < Date.parse($("#datepicker1").val())){
+                        LoadDetailedReport($("#myDetailedReport>tbody tr").length - 1, true);
+                    }
                 }
                 else $("#formAlert").removeClass("alert-success").addClass("alert-danger").html(arrResult[1]).slideDown();
             }
@@ -278,8 +281,9 @@ function CreateDetailedReportLoader(boolLoader = true){
     else $("#myDetailedReport > tbody:last-child").append("<tr class=\"row-clear\"><td class=\"text-center font-italic\" colspan=\""+$("#myDetailedReport thead tr th").length+"\">No more record to show</td></tr>");
 }
 
-function LoadDetailedReport(){
-    var LoadLimit = 10;
+function LoadDetailedReport(LoadLimit = 10, reload = false){
+    if(reload) $("#txtLastDateRecord").val("<?=$txtReportDateReset?>");
+
     $.ajax({
         url: "assets/home.ajax.php",
         method: "POST",
@@ -292,6 +296,8 @@ function LoadDetailedReport(){
         success: function(result){
             console.log(result);
             $("#myDetailedReportLoader").parent().parent().remove(); // a < td < tr
+
+            if(reload) $("#myDetailedReport>tbody tr").remove();
 
             booLoader = (result.RecordDate.length < LoadLimit) ? false : true;
 
