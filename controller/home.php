@@ -55,7 +55,7 @@ $strQ .= " ORDER BY FormOutlineDetl.SeqNo, FormOutlineDetl.Description";
 $rsResult = mySelectDB($strQ, $intHandle);
 list($txtStoreForm, $txtDailyRecordReportHeader) = myRenderStoreHTML($rsResult);
 
-
+$txtReportDateReset = date("Y-m-d", strtotime($txtDateToday."+1 days"));
 
 $txtDailyRecordReportContent = "";
 
