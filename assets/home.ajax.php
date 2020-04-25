@@ -94,41 +94,57 @@ function GoChart($intHandle){
     $txtDateTo = addslashes($_POST["postDateTo"]);
     $txtDateFrom = addslashes($_POST["postDateFrom"]);
 
-    // hard code key to graph: load sales
-    $strQ = "SELECT FormOutlineDetl.Autokey FROM FormOutlineDetl INNER JOIN FormOutlineMain ON FormOutlineDetl.FormOutlinekey = FormOutlineMain.Autokey WHERE FormOutlineMain.Storekey = '".$_SESSION["storeKey"]."' AND FormOutlineDetl.IsWithGraph = 1";
+    // setting up form outline
+    $strQ = "SELECT FormOutlineDetl.Autokey, FormOutlineDetl.SeqNo, FormOutlineDetl.Description, Colors.Red, Colors.Green, Colors.Blue FROM FormOutlineDetl INNER JOIN FormOutlineMain ON FormOutlineDetl.FormOutlinekey = FormOutlineMain.Autokey INNER JOIN Colors ON FormOutlineDetl.Colorkey = Colors.Autokey WHERE FormOutlineMain.Storekey = '".$_SESSION["storeKey"]."' AND FormOutlineDetl.IsWithGraph = 1 ORDER BY FormOutlineDetl.SeqNo";
     $rsResult = mySelectDB($strQ, $intHandle);
+    
     while($objRow = myFetchObj($rsResult)){
         $arrOutlineDetlkey[] = $objRow->Autokey;
+        $arrReturn["SeqNo"][] = $objRow->SeqNo;
+        $arrReturn["data"]["datasets"][$objRow->SeqNo]["label"] = $objRow->Description;
+        $r = $objRow->Red;
+        $g = $objRow->Green;
+        $b = $objRow->Blue;
+        $arrReturn["data"]["datasets"][$objRow->SeqNo]["backgroundColor"] = "rgba($r, $g, $b, 0.2)";
+        $arrReturn["data"]["datasets"][$objRow->SeqNo]["borderColor"] = "rgba($r, $g, $b, 1)";
     }
-    $txtOutlineDetlkey = implode(",", $arrOutlineDetlkey);
+    // initialization of data
+    $num = 0;
+    do{
+        for($idx = 0; $idx < count($arrReturn["SeqNo"]); $idx++){
+            $intSeqNo = $arrReturn["SeqNo"][$idx];
+            $arrReturn["data"]["datasets"][$intSeqNo]["data"][] = "0";
+        }
+        $tmpDate = strtotime($txtDateFrom."+$num days");
+        $arrReturn["data"]["labels"][] = date("Y-m-d", $tmpDate);
+        $num++;
+    }while($tmpDate < strtotime($txtDateTo));
 
-    $strQ = "SELECT FormOutlineDetl.Description, Colors.Red, Colors.Green, Colors.Blue, DailyRecordMain.RecordDate, DailyRecordDetl.RawData FROM DailyRecordMain";
+
+    // setting up daily data
+    $strQ = "SELECT DailyRecordMain.RecordDate, DailyRecordDetl.RawData, FormOutlineDetl.SeqNo FROM DailyRecordMain";
     $strQ .= " INNER JOIN DailyRecordDetl ON DailyRecordMain.Autokey = DailyRecordDetl.DailyRecordkey";
     $strQ .= " INNER JOIN FormOutlineDetl ON DailyRecordDetl.OutlineDetlkey = FormOutlineDetl.Autokey";
-    $strQ .= " INNER JOIN Colors ON FormOutlineDetl.Colorkey = Colors.Autokey";
-    $strQ .= " WHERE FormOutlineDetl.Autokey IN ($txtOutlineDetlkey) AND DailyRecordMain.RecordDate >= '$txtDateFrom' AND DailyRecordMain.RecordDate <= '$txtDateTo'";
+    $strQ .= " WHERE FormOutlineDetl.Autokey IN (".implode(",", $arrOutlineDetlkey).") AND DailyRecordMain.RecordDate >= '$txtDateFrom' AND DailyRecordMain.RecordDate <= '$txtDateTo'";
     $strQ .= " ORDER BY FormOutlineDetl.SeqNo, FormOutlineDetl.Description, DailyRecordMain.RecordDate";
     $rsResult = mySelectDB($strQ, $intHandle);
     
-    $arrReturn = array();
     $arrReturn["type"] = "line";
     $tmpDesc = "";
-    $idx = -1;
     while($objRow = myFetchObj($rsResult)){
-        if($tmpDesc != $objRow->Description){
-            $tmpDesc = $objRow->Description;
-            $idx++;
-            $arrReturn["data"]["datasets"][$idx]["label"] = $tmpDesc;
-            $r = $objRow->Red;
-            $g = $objRow->Green;
-            $b = $objRow->Blue;
-            $arrReturn["data"]["datasets"][$idx]["backgroundColor"] = "rgba($r, $g, $b, 0.2)";
-            $arrReturn["data"]["datasets"][$idx]["borderColor"] = "rgba($r, $g, $b, 1)";
+        foreach ($arrReturn["data"]["labels"] as $key => $txtDate) {
+            if($txtDate == $objRow->RecordDate){
+                $arrReturn["data"]["datasets"][$objRow->SeqNo]["data"][$key] = $objRow->RawData;
+                break;
+            }
         }
-        if(!$idx) $arrReturn["data"]["labels"][] = str_replace("-", "/", substr($objRow->RecordDate, -5));
-        $arrReturn["data"]["datasets"][$idx]["data"][] = $objRow->RawData;
     }
-    
+
+    // reformatting labels
+    for($x = 0; $x < count($arrReturn["data"]["labels"]); $x++){
+        $arrReturn["data"]["labels"][$x] = str_replace("-", "/", substr($arrReturn["data"]["labels"][$x],-5));
+    }
+
     return json_encode($arrReturn);
 }
 
