@@ -22,7 +22,7 @@ function FormOutlineRender($rsResult){
         $txtRet .= "<td class=\"text-center\">".($objRow->IsWithGraph ? "YES":"NO")."</td>";
 
         // color render
-        $txtRet .= "<td class=\"text-center align-middle\"><div style=\"height: 24px; width: 24px; display: inline-block; vertical-align:top; background: rgba(".$objRow->Red.",".$objRow->Green.",".$objRow->Blue.",0.2); border: 3px solid rgba(".$objRow->Red.",".$objRow->Green.",".$objRow->Blue.",1); border-radius: 50%;\"></div></td>";
+        $txtRet .= "<td class=\"text-center\"><div style=\"height: 24px; width: 24px; display: inline-block; vertical-align:top; background: rgba(".$objRow->Red.",".$objRow->Green.",".$objRow->Blue.",0.2); border: 3px solid rgba(".$objRow->Red.",".$objRow->Green.",".$objRow->Blue.",1); border-radius: 50%;\"></div></td>";
         $txtRet .= "</tr>";
     }
     return $txtRet;

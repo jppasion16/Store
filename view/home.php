@@ -13,7 +13,7 @@
             <?=$txtStoreForm; ?>
         </form>
         <div class="form-group row">
-            <label for="txtRemarks" class="col-sm-4 col-md-12 col-form-label">Remarks</label>
+            <label class="col-sm-4 col-md-12 col-form-label">Remarks</label>
             <div class="col-sm-8 col-md-12">
                 <textarea id="txtRemarks" class="form-control" rows="3"></textarea>
             </div>

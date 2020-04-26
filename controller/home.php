@@ -9,7 +9,7 @@ function myRenderStoreHTML($rsResult){
         // form
         $txtAutokey = $objRow->Outlinekey;
         $txtRet .= "<div class=\"form-group row align-items-center\">";
-        $txtRet .= "<label for=\"rawdata-$txtAutokey\" class=\"col-sm-4 col-md-12 col-form-label\">".$objRow->Description."</label>";
+        $txtRet .= "<label class=\"col-sm-4 col-md-12 col-form-label\">".$objRow->Description."</label>";
         $txtRet .= "<div class=\"col-sm-8 col-md-12\">";
         // Type: T-text, N-number, S-select, C-checkbox
         switch($objRow->Type){
