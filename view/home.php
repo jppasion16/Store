@@ -1,4 +1,3 @@
-<!-- save to home_save_update -->
 <div class="row">
     <!-- form div -->
     <div class="col-md-4">
@@ -6,7 +5,7 @@
         <div class="form-group row">
             <label for="datepicker1" class="col-sm-4 col-md-12 col-form-label">Date</label>
             <div class="col-sm-8 col-md-12">
-                <input type="text" id="datepicker1" class="datepicker form-control" value="<?= $txtDateToday; ?>">
+                <input type="text" id="datepicker1" class="datepicker form-control" value="<?= $txtDateToday; ?>" readonly>
             </div>
         </div>
 
@@ -43,7 +42,7 @@
                 <div class="form-group row">
                     <label for="dateFrom" class="col-lg-4 col-form-label">Date From</label>
                     <div class="col-lg-8">
-                        <input type="text" id="dateFrom" class="form-control" value="<?=$txtDateFrom; ?>" placeholder="yyyy-mm-dd">
+                        <input type="text" id="dateFrom" class="datepicker form-control" value="<?=$txtDateFrom; ?>" placeholder="yyyy-mm-dd" readonly>
                     </div>
                 </div>
             </div>
@@ -51,7 +50,7 @@
                 <div class="form-group row">
                     <label for="dateTo" class="col-lg-4 col-form-label">Date To</label>
                     <div class="col-lg-8">
-                        <input type="text" id="dateTo" class="form-control" value="<?=$txtDateToday; ?>" placeholder="yyyy-mm-dd">
+                        <input type="text" id="dateTo" class="datepicker form-control" value="<?=$txtDateToday; ?>" placeholder="yyyy-mm-dd" readonly>
                     </div>
                 </div>
             </div>
@@ -128,18 +127,19 @@ function myChart_update(chart){
         },
         dataType: "json",
         success: function(result){
-            // console.log(result);
+            console.log(result);
             chart.type = result.type;
             chart.data.labels = result.data.labels;
             
             chart.data.datasets.splice(0,chart.data.datasets.length);
-            for(i = 0; i < result.data.datasets.length; i++){
+            for(i = 0; i < result.SeqNo.length; i++){
+                idx = result.SeqNo[i];
                 chart.data.datasets.push({
-                    label: result.data.datasets[i].label,
-                    data: result.data.datasets[i].data,
+                    label: result.data.datasets[idx].label,
+                    data: result.data.datasets[idx].data,
                     fill: false,
-                    backgroundColor: result.data.datasets[i].backgroundColor,
-                    borderColor: result.data.datasets[i].borderColor,
+                    backgroundColor: result.data.datasets[idx].backgroundColor,
+                    borderColor: result.data.datasets[idx].borderColor,
                 });
             }
             chart.update();
@@ -228,7 +228,7 @@ $(document).ready(function(){
             arrValue[tmpIdx] = $(this).val();
             tmpIdx++;
         });
-        console.log(arrOutlinekey.join("|"));
+        // console.log(arrOutlinekey.join("|"));
         $.ajax({
             url: "assets/home.ajax.php",
             method: "POST",
@@ -303,16 +303,20 @@ function LoadDetailedReport(LoadLimit = 10, reload = false){
             booLoader = (result.RecordDate.length < LoadLimit) ? false : true;
 
             var appendValue = "";
+            var headerLength = $("#myDetailedReport thead tr th").length - 1;
             for(i = 0; i < result.RecordDate.length; i++){
                 appendValue += "<tr>";
                 appendValue += "<td>"+result.RecordDate[i]+"</td>";
-                for(j = 0; j < $("#myDetailedReport thead tr th").length - 1; j++){
+                for(j = 0; j < headerLength; j++){
                     tmpIdx = j+1;
                     while(tmpIdx != result.SeqNo[i][j]){
-                        tmpIdx++;
+                        if(tmpIdx == headerLength) break;
                         appendValue += "<td class=\"text-right\">0.00</td>";
+                        tmpIdx++;
                     }
-                    appendValue += "<td class=\"text-right\">"+result.RawData[i][j]+"</td>";
+                    if(result.RawData[i][j]) val = result.RawData[i][j];
+                    else val = "0.00";
+                    appendValue += "<td class=\"text-right\">"+val+"</td>";
                     j = tmpIdx-1;
                 }
                 appendValue += "</tr>";

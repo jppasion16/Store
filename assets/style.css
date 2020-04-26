@@ -52,6 +52,12 @@ a{
     text-decoration: none;
 }
 
+.datepicker{
+    background-color: transparent !important;
+    cursor: default;
+    text-align: center;
+}
+
 .row-clear{
     border-color: transparent !important;
     background-color: transparent !important;
