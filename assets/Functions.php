@@ -4,6 +4,7 @@
 	Functions commonly used of all pages
 */
 session_start();
+date_default_timezone_set('Asia/Manila');
 include_once("Config.php");
 
 function Error404($txtErrorMsg = ""){
