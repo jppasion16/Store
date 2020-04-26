@@ -40,12 +40,7 @@ function SaveForm($intHandle){
     for($idx = 0; $idx < count($arrIDList); $idx++){
         $intOutlineDetlkey = addslashes(trim($arrIDList[$idx]));
         $txtValue = addslashes(trim($arrValue[$idx]));
-        
-        // define type
-        $strQ = "SELECT `Type` FROM FormOutlineDetl WHERE Autokey = '$intOutlineDetlkey'";
-        $rsResult = mySelectDB($strQ, $intHandle);
-        list($txtLineType) = myFetchRow($rsResult);
-        if($txtLineType == 'N' AND strlen($txtValue) == 0) $txtValue = 0;
+        if(strlen($txtValue) == 0) continue;
 
         if($boolOldRecord){
             $strQ = "SELECT Autokey FROM DailyRecordDetl WHERE DailyRecordkey = '$intDailyRecordkey' AND OutlineDetlkey = '$intOutlineDetlkey'";
