@@ -5,7 +5,7 @@
         <div class="form-group row">
             <label for="datepicker1" class="col-sm-4 col-md-12 col-form-label">Date</label>
             <div class="col-sm-8 col-md-12">
-                <input type="text" id="datepicker1" class="datepicker form-control" value="<?= $txtDateToday; ?>">
+                <input type="text" id="datepicker1" class="datepicker form-control" value="<?= $txtDateToday; ?>" readonly>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                 <div class="form-group row">
                     <label for="dateFrom" class="col-lg-4 col-form-label">Date From</label>
                     <div class="col-lg-8">
-                        <input type="text" id="dateFrom" class="form-control" value="<?=$txtDateFrom; ?>" placeholder="yyyy-mm-dd">
+                        <input type="text" id="dateFrom" class="datepicker form-control" value="<?=$txtDateFrom; ?>" placeholder="yyyy-mm-dd" readonly>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                 <div class="form-group row">
                     <label for="dateTo" class="col-lg-4 col-form-label">Date To</label>
                     <div class="col-lg-8">
-                        <input type="text" id="dateTo" class="form-control" value="<?=$txtDateToday; ?>" placeholder="yyyy-mm-dd">
+                        <input type="text" id="dateTo" class="datepicker form-control" value="<?=$txtDateToday; ?>" placeholder="yyyy-mm-dd" readonly>
                     </div>
                 </div>
             </div>
@@ -142,15 +142,6 @@ function myChart_update(chart){
                     borderColor: result.data.datasets[idx].borderColor,
                 });
             }
-            // for(i = 0; i < result.data.datasets.length; i++){
-            //     chart.data.datasets.push({
-            //         label: result.data.datasets[i].label,
-            //         data: result.data.datasets[i].data,
-            //         fill: false,
-            //         backgroundColor: result.data.datasets[i].backgroundColor,
-            //         borderColor: result.data.datasets[i].borderColor,
-            //     });
-            // }
             chart.update();
         }
     });
