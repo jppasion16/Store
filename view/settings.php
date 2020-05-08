@@ -69,7 +69,7 @@ switch(strtolower($_GET["type"])):
             </div>
         </div>
         <input type="hidden" id="txtSaveType" name="txtSaveType" value="account">
-        <button class="btn btn-primary" type="button" id="btnSave">Save</button>
+        <button class="btn btn-primary" type="submit" id="btnSave">Save</button>
         <?php if(isset($_SESSION["intSaveSuccess"])): 
             if($_SESSION["intSaveSuccess"] == 1): ?>
                 <i id="boolSaveSuccessIndicator" class="fa fa-check text-success"></i>
@@ -83,30 +83,7 @@ switch(strtolower($_GET["type"])):
 
     <!-- This script is from bootstrap documentation -->
     <script>
-        $(document).ready(function(){
-            $("#btnSave").click(function(){
-                $("#boolSaveSuccessIndicator").toggle();
-                $("#AccountForm").submit();
-            });
-        });
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            }, false);
-            });
-        }, false);
-        })();
+        myBootstrapFormValidator();
     </script>
 
 <?php

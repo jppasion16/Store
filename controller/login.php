@@ -41,37 +41,46 @@ if(isset($_POST["IsAjax"]) OR isset($_COOKIE["store-system-login-credentials"]))
         $intHandle = myOpenDB();
         $txtUserName = trim(addslashes($_POST["txtUserName"]));
         $txtPassword = trim(addslashes($_POST["txtPassword"]));
-        $strQ = "SELECT U.Autokey AS Userkey, S.Autokey AS Storekey, S.Description AS StoreDesc, S.StoreNo FROM Users U INNER JOIN Stores S ON U.Storekey = S.Autokey WHERE U.UserName = '$txtUserName' AND U.Password = PASSWORD('$txtPassword') LIMIT 1";
+        $strQ = "SELECT Autokey AS Userkey FROM Users WHERE UserName = '$txtUserName' AND Password = PASSWORD('$txtPassword') LIMIT 1";
     }
     else{
         $method = "cookie";
         $chkKeepLogin = "checked";
         $intHandle = myOpenDB();
         list($txtUserName, $txtLoginToken) = explode("%", addslashes($_COOKIE["store-system-login-credentials"]));
-        $strQ = "SELECT U.Autokey AS Userkey, S.Autokey AS Storekey, S.Description AS StoreDesc, S.StoreNo FROM Users U INNER JOIN Stores S ON U.Storekey = S.Autokey INNER JOIN UserLoginTokens T ON U.Autokey = T.Userkey WHERE U.UserName = '$txtUserName' AND T.Token = '$txtLoginToken' LIMIT 1";
+        $strQ = "SELECT U.Autokey AS Userkey FROM Users U INNER JOIN UserLoginTokens T ON U.Autokey = T.Userkey WHERE U.UserName = '$txtUserName' AND T.Token = '$txtLoginToken' LIMIT 1";
     }
     $rsResult = mySelectDB($strQ, $intHandle);
 
     if(myNumRows($rsResult) > 0){
         $_SESSION["currUserName"] = $txtUserName;
         $objRow = myFetchObj($rsResult);
-        $_SESSION["storeKey"] = $objRow->Storekey;
-        $_SESSION["storeName"] = $objRow->StoreDesc;
-        $_SESSION["storeNo"] = $objRow->StoreNo;
-        
-        switch(strtolower($method)){
-            case "ajax":
-                // check if keep me logged in was checked
-                if($_POST["chkKeepLogin"]){
-                    $chkKeepLogin = "checked";
-                    KeepMeLogin($intHandle, $objRow->Userkey, $txtUserName);
-                }
-                echo "1";
-            break;
-            case "cookie":
-                header("Location: ".$_SESSION["HomeDir"]);
-            break;
+        $intUserkey = $objRow->Userkey;
+
+        $strQ = "SELECT S.Autokey AS Storekey, S.Description AS StoreDesc, S.StoreNo FROM Stores S INNER JOIN Users U ON S.Autokey = U.Storekey WHERE U.Autokey = '".$intUserkey."'";
+        $rsResult = mySelectDB($strQ, $intHandle);
+        if(myNumRows($rsResult) > 0){
+            $objRow = myFetchObj($rsResult);
+            
+            $_SESSION["storeKey"] = $objRow->Storekey;
+            $_SESSION["storeName"] = $objRow->StoreDesc;
+            $_SESSION["storeNo"] = $objRow->StoreNo;
+            
+            switch(strtolower($method)){
+                case "ajax":
+                    // check if keep me logged in was checked
+                    if($_POST["chkKeepLogin"]){
+                        $chkKeepLogin = "checked";
+                        KeepMeLogin($intHandle, $intUserkey, $txtUserName);
+                    }
+                    echo "1";
+                break;
+                case "cookie":
+                    header("Location: ".$_SESSION["HomeDir"]);
+                break;
+            }
         }
+        echo "0";
     }
     else{
         if($boolIsPosted) echo "0";

@@ -2,11 +2,11 @@
     <div class="col-sm-8 col-md-6 col-lg-5">
         <div class="card sticky-top">
             <div class="card-body">
-                <h3 class="card-title">Login</h3>
+                <h3 class="card-title text-center mb-5">Login</h3>
                 <form autocomplete="off">
                     <div class="form-group row">
                         <div class="col">
-                            <input type="text" id="txtUserName" name="txtUserName" class="form-control" placeholder="User Name" value="<?=$txtUserName?>">
+                            <input type="text" id="txtUserName" name="txtUserName" class="form-control" placeholder="Email Address" value="<?=$txtUserName?>">
                         </div>
                     </div>
 
@@ -19,17 +19,16 @@
                         </div>
                     </div>
 
-                    <div class="form-check">
+                    <div class="form-check form-group">
                         <input type="checkbox" class="form-check-input" id="chkKeepLogin" <?=$chkKeepLogin?>>
                         <label class="form-check-label" for="chkKeepLogin">Keep me logged in</label>
                     </div>
                     
-                    <div class="form-group row">
-                        <div class="col">
-                            <button type="button" id="btnLogin" class="btn btn-primary btn-block">LOGIN</button>
-                        </div>
+                    <div class="form-group">
+                        <button type="button" id="btnLogin" class="btn btn-primary btn-block font-weight-bold">LOG IN</button>
                     </div>
                 </form>
+                <p class="text-center mt-5 mb-0 text-secondary">Not a member yet? <a href="<?=$_SESSION["HomeDir"]."signup"?>" class="text-primary font-weight-bold">Sign Up</a></p>
             </div>
         </div>
     </div>
