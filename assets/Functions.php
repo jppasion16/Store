@@ -97,4 +97,24 @@ function myFetchObj($rsResult){
 	return $rsResult->fetch(PDO::FETCH_OBJ);
 }
 
+function myOptionRendering($arrVal, $arrDesc){
+	if(isset($arrVal) AND isset($arrDesc)){
+		if(count($arrVal) != count($arrDesc)){
+			Error404("myOptionRendering Error: values and descriptions didn't match the count.");
+			exit;
+		}
+	}
+	elseif(!isset($arrVal) OR !isset($arrDesc)){
+		Error404("myOptionRendering Error: values and descriptions didn't match the count.");
+		exit;
+	}
+	
+
+	$txtRet = "";
+	for($idx = 0; $idx < count($arrVal); $idx++){
+		$txtRet .= "<option value='".$arrVal[$idx]."'>".$arrDesc[$idx]."</option>";
+	}
+	return $txtRet;
+}
+
 ?>

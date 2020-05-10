@@ -38,6 +38,10 @@ if(!isset($_SESSION["currUserName"])){
     header("Location: ".$_SESSION["HomeDir"]."login");
     exit;
 }
+elseif(!isset($_SESSION["storeKey"])){
+    header("Location: ".$_SESSION["HomeDir"]."signup-store");
+    exit;
+}
 
 $intHandle = myOpenDB();
 

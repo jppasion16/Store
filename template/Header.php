@@ -21,6 +21,9 @@ $active = ArrayConcat(array(), $arrPath, "active");
 if(isset($_SESSION["currUserName"])) $boolHasSession = true;
 else $boolHasSession = false;
 
+if(isset($_SESSION["storeKey"])) $boolHasStore = true;
+else $boolHasStore = false;
+
 ?>
 
 <!doctype html>
@@ -40,7 +43,8 @@ else $boolHasSession = false;
     <link rel="stylesheet" type="text/css" href="<?=$_SESSION["HomeDir"]?>assets/bootstrap/css/bootstrap.css">
     <script src="<?=$_SESSION["HomeDir"]?>assets/bootstrap/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="<?=$_SESSION["HomeDir"]?>assets/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=$_SESSION["HomeDir"]?>assets/font-awesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="<?=$_SESSION["HomeDir"]?>assets/font-awesome/css/solid.min.css">
 
     <!-- OWN -->
     <link rel="stylesheet" type="text/css" href="<?=$_SESSION["HomeDir"]?>assets/style.css.php">
@@ -99,7 +103,7 @@ else $boolHasSession = false;
     </script>
     <nav id="TopNav" class="navbar navbar-light bg-white navbar-expand-sm fixed-top shadow-sm">
         <a class="navbar-brand" href="<?=$_SESSION["HomeDir"]?>">
-            <?php if($boolHasSession): ?>
+            <?php if($boolHasStore): ?>
                 <img src="<?=$_SESSION["HomeDir"]."assets/images/".$_SESSION["storeNo"]?>.png" height="30" alt="My Store"> <!-- style="filter: brightness(0) invert(1)" -->
             <?php else: ?>
                 <i class="fas fa-store"></i> Store System

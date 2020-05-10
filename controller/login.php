@@ -66,24 +66,20 @@ if(isset($_POST["IsAjax"]) OR isset($_COOKIE["store-system-login-credentials"]))
             $_SESSION["storeName"] = $objRow->StoreDesc;
             $_SESSION["storeNo"] = $objRow->StoreNo;
             
-            switch(strtolower($method)){
-                case "ajax":
-                    // check if keep me logged in was checked
-                    if($_POST["chkKeepLogin"]){
-                        $chkKeepLogin = "checked";
-                        KeepMeLogin($intHandle, $intUserkey, $txtUserName);
-                    }
-                    echo "1";
-                break;
-                case "cookie":
-                    header("Location: ".$_SESSION["HomeDir"]);
-                break;
+            // redirect page to home if there is saved login token
+            if(strtolower($method) == "cookie"){
+                header("Location: ".$_SESSION["HomeDir"]);
+                exit;
             }
         }
-        echo "0";
+        if($_POST["chkKeepLogin"]){
+            $chkKeepLogin = "checked";
+            KeepMeLogin($intHandle, $intUserkey, $txtUserName);
+        }
+        echo "1";
     }
     else{
-        if($boolIsPosted) echo "0";
+        echo "0";
     }
 }
 

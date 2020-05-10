@@ -3,13 +3,13 @@
         <div class="card sticky-top">
             <div class="card-body">
                 <h3 class="card-title text-center mb-5">Login</h3>
+                <div class="error-container"></div>
                 <form autocomplete="off">
                     <div class="form-group row">
                         <div class="col">
                             <input type="text" id="txtUserName" name="txtUserName" class="form-control" placeholder="Email Address" value="<?=$txtUserName?>">
                         </div>
                     </div>
-
                     <div class="form-group">
                         <div class="input-group">
                             <input type="password" id="txtPassword" name="txtPassword" class="form-control" placeholder="Password" value="<?=$txtPassword?>" data-toggle="password">
@@ -69,7 +69,7 @@ $(document).ready(function(){
                     window.location.replace("<?=$_SESSION["HomeDir"];?>");
                 }
                 else{
-                    $("#txtPassword").val("");
+                    $(".error-container").html('<div class="alert alert-warning" role="alert">Failed authentication! Check your login credentials and try again.</div>');
                 }
             }
         });
